@@ -7,3 +7,9 @@ export const VIDEO_STREAMS_SUBSCRIPTION = `subscription VideoStreams {
     }
   }
 }`;
+
+export const SCREENSHARE_STREAM_SUBSCRIPTION = `subscription Screenshare {
+  screenshare {
+    stream
+  }
+}`;

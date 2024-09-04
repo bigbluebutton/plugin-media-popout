@@ -13,4 +13,14 @@ interface VideoStreamsSubscriptionResultType {
   }[];
 }
 
-export { PopoutPluginProps, VideoStreamsSubscriptionResultType };
+interface ScreenshareStreamsSubscriptionResultType {
+  screenshare?: {
+    stream: string
+  }[];
+}
+
+export {
+  PopoutPluginProps,
+  VideoStreamsSubscriptionResultType,
+  ScreenshareStreamsSubscriptionResultType,
+};
