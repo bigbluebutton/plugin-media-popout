@@ -1,8 +1,8 @@
 module.exports = {
   entry: './src/index.tsx',
   output: {
-    filename: '<PluginName>.js',
-    library: '<PluginName>',
+    filename: 'MediaPopoutPlugin.js',
+    library: 'MediaPopoutPlugin',
     libraryTarget: 'umd',
     publicPath: '/static/',
     globalObject: 'this',
