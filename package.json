@@ -1,7 +1,7 @@
 {
-  "name": "media-popout-plugin",
+  "name": "plugin-media-popout",
   "version": "0.1.1",
-  "private": true,
+  "private": false,
   "main": "./src/index.tsx",
   "dependencies": {
     "@testing-library/react": "^13.4.0",
