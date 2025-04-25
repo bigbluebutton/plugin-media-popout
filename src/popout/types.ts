@@ -19,8 +19,15 @@ interface ScreenshareStreamsSubscriptionResultType {
   }[];
 }
 
+interface AmIBotGraphqlResponse {
+  user_current: {
+      bot: boolean;
+  }[]
+}
+
 export {
   PopoutPluginProps,
   VideoStreamsSubscriptionResultType,
   ScreenshareStreamsSubscriptionResultType,
+  AmIBotGraphqlResponse,
 };

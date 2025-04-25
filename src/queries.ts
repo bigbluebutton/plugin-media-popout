@@ -13,3 +13,9 @@ export const SCREENSHARE_STREAM_SUBSCRIPTION = `subscription Screenshare {
     stream
   }
 }`;
+
+export const AM_I_BOT_SUBSCRIPTION = `subscription UserBotSubscription {
+  user_current {
+    bot
+  }
+}`;
