@@ -10,9 +10,16 @@ import {
   UserCameraHelperItemPosition,
   IntlLocaleUiDataNames,
 } from 'bigbluebutton-html-plugin-sdk';
-import { PopoutPluginProps, VideoStreamsSubscriptionResultType, ScreenshareStreamsSubscriptionResultType } from './types';
-import { VIDEO_STREAMS_SUBSCRIPTION, SCREENSHARE_STREAM_SUBSCRIPTION } from '../queries';
+import {
+  PopoutPluginProps,
+  VideoStreamsSubscriptionResultType,
+  ScreenshareStreamsSubscriptionResultType,
+  AmIBotGraphqlResponse,
+} from './types';
+import { VIDEO_STREAMS_SUBSCRIPTION, SCREENSHARE_STREAM_SUBSCRIPTION, AM_I_BOT_SUBSCRIPTION } from '../queries';
 import { togglePopout } from './service';
+
+const localesContext = require.context('@locales', true, /\.json$/);
 
 const intlMessages = defineMessages({
   label: {
@@ -22,7 +29,7 @@ const intlMessages = defineMessages({
 });
 
 function MediaPopoutPlugin({ pluginUuid: uuid }: PopoutPluginProps):
-React.ReactElement<PopoutPluginProps> {
+  React.ReactElement<PopoutPluginProps> {
   BbbPluginSdk.initialize(uuid);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
 
@@ -31,11 +38,11 @@ React.ReactElement<PopoutPluginProps> {
     fallbackLocale: 'en',
   });
 
-  let messages = {};
+  let messages = [];
   try {
-    messages = require(`../../locales/${currentLocale.locale}.json`);
+    messages = localesContext(`./${currentLocale.locale}.json`);
   } catch {
-    messages = require(`../../locales/${currentLocale.fallbackLocale}.json`);
+    messages = localesContext(`./${currentLocale.fallbackLocale}.json`);
   }
 
   const intl = createIntl({
@@ -59,6 +66,10 @@ React.ReactElement<PopoutPluginProps> {
   const { data: screenshareStreams } = pluginApi.useCustomSubscription<
     ScreenshareStreamsSubscriptionResultType
   >(SCREENSHARE_STREAM_SUBSCRIPTION);
+
+  const { data: amIBotData } = pluginApi.useCustomSubscription<
+    AmIBotGraphqlResponse
+  >(AM_I_BOT_SUBSCRIPTION);
 
   useEffect(() => {
     const screenShareStreamId = screenshareStreams?.screenshare[0]?.stream;
@@ -131,7 +142,7 @@ React.ReactElement<PopoutPluginProps> {
   };
 
   useEffect(() => {
-    if (videoStreams) {
+    if (videoStreams && videoStreams?.user_camera.length > 0) {
       pluginApi.setUserCameraHelperItems([
         new UserCameraHelperButton({
           icon: 'popout_window',
@@ -140,11 +151,13 @@ React.ReactElement<PopoutPluginProps> {
           tooltip: intl.formatMessage(intlMessages.label),
           position: UserCameraHelperItemPosition.TOP_RIGHT,
           onClick: onClickPopoutButton,
-          displayFunction: ({ streamId }) => !poppedStreams[streamId],
+          displayFunction: ({ streamId }: { streamId: string }) => !amIBotData?.user_current[0]?.bot
+            && streamId !== null
+            && !poppedStreams[streamId],
         }),
       ]);
     }
-  }, [videoStreams, poppedStreamsCount, currentLocale]);
+  }, [videoStreams, poppedStreamsCount, currentLocale, amIBotData]);
 
   return null;
 }
