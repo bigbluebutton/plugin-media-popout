@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   entry: './src/index.tsx',
   output: {
@@ -39,5 +41,8 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.tsx', '.ts'],
+    alias: {
+      '@locales': path.resolve(__dirname, './locales'),
+    },
   },
 };
